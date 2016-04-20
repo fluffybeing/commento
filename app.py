@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import re
+import os
 from flask import Flask, request, flash, url_for, redirect, render_template
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
@@ -82,8 +83,8 @@ if __name__ == '__main__':
     # standard port for HTTP
     db.create_all()
 
+    port = int(os.environ.get("PORT", 33507))
     app.run(
         host="0.0.0.0",
-        port=5000,
-        debug=True
+        port=port,
     )
