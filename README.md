@@ -10,3 +10,5 @@ are presented alongwith an option to enter a new comment. The entered
 comment is validated and saved to the database and listed in the home
 page. If there are any validation errors, they are presented to the
 user alongwith the form
+
+We also explained how to deploy your Flask app on Heroku using PostgreSQL. The documentation is given in the pdf DeployingyourFlaskAppwithPostgreSQLonHeroku.pdf.
