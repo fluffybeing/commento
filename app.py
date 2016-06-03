@@ -34,7 +34,18 @@ class Comments(db.Model):
         self.comment = comment
         self.pub_date = datetime.now()
 
+class User(db.Model):
 
+    __tablename__ = 'user'
+    # id = db.Column('user_id', db.Integer, primary_key=True)
+    username = db.Column(db.String(100), primary_key=True)
+    email = db.Column(db.String(100))
+    password = db.Column(db.String(100))
+
+    def __init__(self, username, email, password):
+        self.username = username
+        self.email = email
+        self.password = password
 
 @app.route('/')
 def show_all():
@@ -75,6 +86,47 @@ def new():
     # the form validation failed
     return render_template('new.html')
 
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+
+    if request.method == 'POST':
+        if not request.form['username']:
+            flash('Please enter username', 'error')
+        elif not request.form['email']:
+            flash('Please enter email', 'error')
+        elif not request.form['password']:
+            flash('Please enter password', 'error')
+        else:
+            user = User(request.form['username'],
+                        request.form['email'],
+                        request.form['password'])
+        db.session.add(user)
+        db.session.commit()
+
+        flash('User is successfully created')
+
+        return redirect(url_for('show_all'))
+
+    return render_template('signup.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+
+    if request.method == 'POST':
+        if not request.form['username']:
+            flash('Please enter username', 'error')
+        elif not request.form['password']:
+            flash('Please enter password', 'password')
+        else:
+            result = db.session.query(User).filter(User.username==request.form['username'],
+                User.password==request.form['password']).one()
+
+            if result is not None:
+                flash('You have login successfully! Welcome {username}'.format(username=request.form['username']))
+                return redirect(url_for('show_all'))
+
+    return render_template('login.html')
+
 
 # This is the code that gets executed when the current python file is
 # executed.
@@ -86,5 +138,6 @@ if __name__ == '__main__':
     port = int(os.environ.get("PORT", 33507))
     app.run(
         host="0.0.0.0",
-        port=port,
+        port=5000,
+        debug=True,
     )
