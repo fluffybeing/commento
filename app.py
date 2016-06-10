@@ -2,7 +2,7 @@
 
 import re
 import os
-from flask import Flask, request, flash, url_for, redirect, render_template
+from flask import Flask, request, flash, url_for, redirect, render_template, make_response
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
 from datetime import datetime
@@ -126,6 +126,20 @@ def login():
                 return redirect(url_for('show_all'))
 
     return render_template('login.html')
+
+
+# Cookies Demo
+@app.route('/set', methods=['GET', 'POST'])
+def setcookie():
+    resp = make_response("Setting Cookie!")
+    resp.set_cookie("webcast", "Cookie Tutorial")
+    return resp
+
+
+@app.route('/get', methods=['GET', 'POST'])
+def getcookie():
+    webcast = request.cookies.get('webcast')
+    return "The webcasts is about {}".format(webcast)
 
 
 # This is the code that gets executed when the current python file is
